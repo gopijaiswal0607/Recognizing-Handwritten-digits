@@ -1,0 +1,74 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+###################################### Step 1. Data Preparation  ############################################################
+##########################################################################################################################
+
+df=pd.read_csv("train.csv")
+print(df.shape)
+
+# convesion in numpy array
+data=df.values
+
+X=data[:,1:] # except label col
+Y=data[:,0]
+print(X.shape)
+print(Y.shape)
+
+ ###### simply  taking  80 % data for traing and remaing 20% for testing
+
+split=int(0.8*X.shape[0])  
+print(split)
+
+## taking train and test data
+
+x_train=X[:split:,]
+y_train=Y[:split]
+print(x_train.shape,y_train.shape)
+x_test=X[split:,]
+y_test=Y[split:,]
+print(x_test.shape,y_test.shape)
+
+
+# Visualize some training data
+def drawImg(sample):
+    img=sample.reshape((28,28))
+    plt.imshow(img,cmap="pink")
+    plt.show()
+drawImg(x_train[3001])    
+print(y_train[3001])
+
+###################### STEP 2  : KNN CODE ############################################
+###############################################################################
+
+def dist(x1,x2):
+    return math.sqrt(np.sum((x1-x2)**2))
+def knn(x,y,query_point,k=5):
+    vals=[]
+    m=x.shape[0]
+    for i in range(m):
+        for j in range(m):
+            d=dist(query_point,x[i])
+            vals.append([d,y[i]]) 
+            # store distance and label
+            
+    vals=sorted(vals)
+    vals=vals[:k]
+    vals=np.array(vals)
+    new_vals=np.unique(vals,return_count=True)
+    print(new_vals)
+    max_freq_index=np.new_vals[1].argmax()
+    pred=vals[0][max_freq_index]
+    return pred
+    
+    ################################# STEP 3:Prediction ####################################################
+    ##########################################################################################################
+    
+    pred=knn(x_train,y_train,x_test[0])
+    print(int(pred))  
+    
+    # if i want checking that and is corret or not then check label for that test data
+drawImg(x_test[0])
+print(y_test[0])
+    
